@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cikgu Bot - Year 6 Science 🌟</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4CAF50;
+            --secondary: #FF7043;
+            --light-green: #E8F5E8;
+            --light-blue: #E3F2FD;
+            --light-yellow: #FFF8E1;
+            --user-bubble: #B3E5FC;
+            --bot-bubble: #FFECB3;
+            --text-dark: #2E7D32;
+            --text-light: #555;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e8f5e8 100%);
+            color: var(--text-dark);
+            min-height: 100vh;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .banner {
+            text-align: center;
+            margin-bottom: 20px;
+            animation: fadeInDown 0.8s ease;
+        }
+
+        .banner img {
+            width: 180px;
+            height: auto;
+            border-radius: 50%;
+            border: 6px solid white;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 12px;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            background: white;
+            padding: 12px 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .stats-bar i { margin-right: 8px; color: #FFB300; }
+
+        /* Achievements Button */
+        .achievements-btn {
+            background: linear-gradient(135deg, #FFD54F, #FFA726);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(255, 165, 38, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .achievements-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 165, 38, 0.4);
+        }
+
+        /* Achievements Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: slideDown 0.4s ease;
+        }
+
+        .modal-header {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .close-modal {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+            line-height: 20px;
+        }
+
+        .close-modal:hover { color: #000; }
+
+        .achievement-badge {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            margin: 10px 0;
+            background: linear-gradient(135deg, #f0f9ff, #e8f5e8);
+            border-radius: 12px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .achievement-icon {
+            font-size: 32px;
+        }
+
+        .achievement-info {
+            flex: 1;
+        }
+
+        .achievement-name {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 16px;
+        }
+
+        .achievement-desc {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .no-achievements {
+            text-align: center;
+            padding: 30px;
+            color: #999;
+            font-size: 16px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Main Split Layout */
+        .split-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .module {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            overflow: hidden;
+            height: fit-content;
+            animation: fadeInUp 0.7s ease;
+        }
+
+        .module-header {
+            padding: 18px 20px;
+            text-align: center;
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+        }
+
+        #chat-container .module-header {
+            background: linear-gradient(135deg, #66BB6A, #4CAF50);
+        }
+
+        #quiz-container .module-header {
+            background: linear-gradient(135deg, #FF7043, #F4511E);
+        }
+
+        .module-body {
+            padding: 20px;
+        }
+
+        /* Chat Styles */
+        .chat-box {
+            height: 420px;
+            overflow-y: auto;
+            padding: 15px;
+            background: var(--light-green);
+            border-radius: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .message {
+            max-width: 78%;
+            padding: 12px 16px;
+            border-radius: 20px;
+            line-height: 1.4;
+            font-size: 16px;
+            animation: slideIn 0.4s ease;
+        }
+
+        .user-msg {
+            align-self: flex-end;
+            background: var(--user-bubble);
+            color: #0277BD;
+            border-bottom-right-radius: 6px;
+        }
+
+        .bot-msg {
+            align-self: flex-start;
+            background: var(--bot-bubble);
+            color: #F57F17;
+            border-bottom-left-radius: 6px;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 2px solid #ddd;
+            border-radius: 30px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        #user-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.15);
+        }
+
+        .send-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 12px rgba(76,175,80,0.4);
+        }
+
+        .send-btn:hover {
+            background: #43A047;
+            transform: translateY(-2px);
+        }
+
+        /* Quiz Styles */
+        .quiz-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        #quiz-topic {
+            flex: 1;
+            padding: 14px 18px;
+            border: 2px solid #ddd;
+            border-radius: 30px;
+            font-size: 16px;
+        }
+
+        .generate-btn {
+            background: var(--secondary);
+            color: white;
+            padding: 0 20px;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .generate-btn:hover {
+            background: #F4511E;
+        }
+
+        #quiz-question-container {
+            background: var(--light-blue);
+            padding: 20px;
+            border-radius: 16px;
+            margin-top: 15px;
+            text-align: left;
+            display: none;
+        }
+
+        #quiz-question {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 18px;
+            color: #1565C0;
+        }
+
+        .choice-item {
+            background: white;
+            padding: 14px 16px;
+            margin: 10px 0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+        }
+
+        .choice-item:hover {
+            background: #BBDEFB;
+            transform: translateX(5px);
+        }
+
+        .choice-item input[type="radio"] {
+            margin-right: 12px;
+            transform: scale(1.3);
+            accent-color: var(--secondary);
+        }
+
+        .submit-btn {
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background: #E64A19;
+        }
+
+        /* Loading */
+        .typing {
+            font-style: italic;
+            color: #888;
+            align-self: flex-start;
+            background: #f0f0f0;
+            padding: 10px 15px;
+            border-radius: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .split-container {
+                grid-template-columns: 1fr;
+            }
+            .banner img { width: 150px; }
+            .title { font-size: 24px; }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Banner -->
+    <div class="banner">
+        <img src="{{ url_for('static', filename='icons/Cikgu_Bot.jpg') }}" alt="Cikgu Bot">
+        <div class="title">Cikgu Bot Year 6 Science 🌟</div>
+        <div class="subtitle">Your friendly science teacher is here to help!</div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-bar">
+        <span><i class="fas fa-star"></i> Points: <strong id="user-points">0</strong></span>
+        <span><i class="fas fa-medal"></i> Stickers: <strong id="user-stickers">None</strong> 🏅</span>
+        <button class="achievements-btn" onclick="showAchievements()"><i class="fas fa-trophy"></i> My Achievements</button>
+    </div>
+
+    <!-- Main Content -->
+    <div class="split-container">
+        <!-- Chat Module -->
+        <div class="module" id="chat-container">
+            <div class="module-header">
+                <i class="fas fa-robot"></i> Chat with Cikgu Bot
+            </div>
+            <div class="module-body">
+                <div class="chat-box" id="chat-box">
+                    <div class="bot-msg">Hello! I'm Cikgu Bot 👋 Ask me anything about Science for Year 6!</div>
+                </div>
+                <div class="input-area">
+                    <input type="text" id="user-input" placeholder="Type your question here..." onkeydown="if(event.key==='Enter') sendMessage()">
+                    <button class="send-btn" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Module -->
+        <div class="module" id="quiz-container">
+            <div class="module-header">
+                <i class="fas fa-brain"></i> Science Quiz Challenge
+            </div>
+            <div class="module-body">
+                <div class="quiz-input-group">
+                    <input type="text" id="quiz-topic" placeholder="e.g., Solar System, Human Body, Plants">
+                    <button class="generate-btn" onclick="generateQuiz()">Go!</button>
+                </div>
+
+                <div id="quiz-question-container">
+                    <div id="quiz-question"></div>
+                    <div id="quiz-choices"></div>
+                    <button class="submit-btn" id="submit-answer-button" onclick="submitQuizAnswer()">Submit Answer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievements Modal -->
+    <div id="achievements-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeAchievements()">&times;</span>
+            <div class="modal-header">🏆 Your Achievements</div>
+            <div id="achievements-list"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentCorrectAnswer = "";
+
+    // Enhanced send message with typing indicator
+    async function sendMessage() {
+        const input = document.getElementById("user-input");
+        const message = input.value.trim();
+        if (!message) return;
+
+        const chatBox = document.getElementById("chat-box");
+
+        // Add user message
+        const userDiv = document.createElement("div");
+        userDiv.className = "message user-msg";
+        userDiv.textContent = message;
+        chatBox.appendChild(userDiv);
+
+        // Typing indicator
+        const typing = document.createElement("div");
+        typing.className = "message typing";
+        typing.textContent = "Cikgu Bot is thinking...";
+        chatBox.appendChild(typing);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        input.value = "";
+
+        try {
+            const response = await fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: message, username: "guest" })
+            });
+
+            const data = await response.json();
+
+            // Remove typing
+            typing.remove();
+
+            // Add bot response
+            const botDiv = document.createElement("div");
+            botDiv.className = "message bot-msg";
+            botDiv.textContent = data.response;
+            chatBox.appendChild(botDiv);
+
+            // Update stats
+            document.getElementById("user-points").textContent = data.points || 0;
+            document.getElementById("user-stickers").textContent = data.stickers || "None";
+
+            chatBox.scrollTop = chatBox.scrollHeight;
+        } catch (err) {
+            typing.remove();
+            const errorDiv = document.createElement("div");
+            errorDiv.className = "message bot-msg";
+            errorDiv.textContent = "Sorry, I'm having trouble connecting. Try again!";
+            chatBox.appendChild(errorDiv);
+        }
+    }
+
+    async function generateQuiz() {
+        const topic = document.getElementById("quiz-topic").value.trim();
+        if (!topic) {
+            alert("Please enter a science topic!");
+            return;
+        }
+
+        const container = document.getElementById("quiz-question-container");
+        const questionEl = document.getElementById("quiz-question");
+        const choicesEl = document.getElementById("quiz-choices");
+
+        questionEl.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Generating fun question about <strong>${topic}</strong>...`;
+        choicesEl.innerHTML = "";
+        container.style.display = "block";
+
+        try {
+            const res = await fetch("/generate_quiz", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ topic })
+            });
+
+            const quiz = await res.json();
+
+            questionEl.textContent = quiz.question;
+            choicesEl.innerHTML = "";
+
+            const labels = ["A", "B", "C", "D"];
+            quiz.choices.slice(0, 4).forEach((choice, i) => {
+                const cleanChoice = choice.replace(/^[A-D]\)\s*/, "").trim();
+                const div = document.createElement("label");
+                div.className = "choice-item";
+                div.innerHTML = `
+                    <input type="radio" name="quiz-choice" value="${cleanChoice}">
+                    <span><strong>${labels[i]})</strong> ${cleanChoice}</span>
+                `;
+                choicesEl.appendChild(div);
+            });
+
+            currentCorrectAnswer = quiz.correct_answer.trim();
+            document.getElementById("submit-answer-button").style.display = "block";
+        } catch (err) {
+            questionEl.textContent = "Oops! Something went wrong. Try again!";
+        }
+    }
+
+    async function submitQuizAnswer() {
+        const selected = document.querySelector('input[name="quiz-choice"]:checked');
+        if (!selected) {
+            alert("Please choose an answer!");
+            return;
+        }
+
+        const answer = selected.value.trim();
+        const result = await fetch("/quiz_answer", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                answer,
+                correct_answer: currentCorrectAnswer,
+                username: "guest"
+            })
+        }).then(r => r.json());
+
+        alert(result.message);
+
+        if (result.points !== undefined) {
+            document.getElementById("user-points").textContent = result.points;
+        }
+        if (result.stickers) {
+            document.getElementById("user-stickers").textContent = result.stickers;
+        }
+    }
+
+    // Show achievements modal
+    async function showAchievements() {
+        const modal = document.getElementById("achievements-modal");
+        const list = document.getElementById("achievements-list");
+        
+        list.innerHTML = '<div class="no-achievements"><i class="fas fa-spinner fa-spin"></i> Loading achievements...</div>';
+        modal.style.display = "block";
+
+        try {
+            const response = await fetch("/achievements?username=guest");
+            const data = await response.json();
+
+            if (data.achievements && data.achievements.length > 0) {
+                list.innerHTML = data.achievements.map(achievement => `
+                    <div class="achievement-badge">
+                        <div class="achievement-icon">${achievement.icon}</div>
+                        <div class="achievement-info">
+                            <div class="achievement-name">${achievement.name}</div>
+                            <div class="achievement-desc">${achievement.description}</div>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                list.innerHTML = '<div class="no-achievements">🎯 Start chatting and taking quizzes to earn achievements!</div>';
+            }
+        } catch (err) {
+            list.innerHTML = '<div class="no-achievements">❌ Failed to load achievements. Try again!</div>';
+        }
+    }
+
+    // Close achievements modal
+    function closeAchievements() {
+        document.getElementById("achievements-modal").style.display = "none";
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        const modal = document.getElementById("achievements-modal");
+        if (event.target == modal) {
+            closeAchievements();
+        }
+    }
+</script>
+</body>
+</html>
