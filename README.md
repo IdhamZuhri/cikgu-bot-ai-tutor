@@ -36,5 +36,5 @@ CikguBot provides:
 ## 🛠️ Tech Stack
 
 - **Frontend:** HTML / CSS / JavaScript  
-- **Backend:** (Add if applicable, e.g., Node.js / Flask)  
-- **AI Logic:** Rule-based / API-based quiz generation  
+- **Backend:** Node.js / Flask 
+- **AI Logic:** Rule-based / API-based 
